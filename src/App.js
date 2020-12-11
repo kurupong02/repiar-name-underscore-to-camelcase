@@ -7,7 +7,7 @@ import includes from 'lodash/includes'
 import FileSaver from 'file-saver'
 
 const underscoreToCamelcase = (v) => {
-  return v.toLowerCase().replace(/_([a-z])/g, function (g) { return g[1].toUpperCase(); });
+  return v.toLowerCase().replace(/_([a-z0-9])/g, function (g) { return g[1].toUpperCase(); });
 }
 
 const textbox = (list) => {
