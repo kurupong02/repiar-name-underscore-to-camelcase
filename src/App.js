@@ -70,9 +70,9 @@ function App() {
 
 
   const getType = (value) => {
-    if (includes(value, 'NUMBER')) return 'Number'
+    if (includes(value, 'NUMBER')) return 'BigDecimal'
     if (includes(value, 'DATE')) return 'Date'
-    if (includes(value, 'TIMESTAMP')) return 'Timestamp'
+    if (includes(value, 'TIMESTAMP')) return 'Date'
     if (includes(value, 'BLOB')) return 'Blob'
 
     return 'String'
