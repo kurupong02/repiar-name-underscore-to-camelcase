@@ -80,12 +80,14 @@ function App() {
 
   const handleOnChangeText = (v) => {
     const { value } = v.target
-    const valueReplace = value.replace(/, \n\t/g, ",")
-    const valueSplit = split(valueReplace, ',')
+    const valueReplace = value.replace(/, \n\t/g, ",").replace(/,"/g, ";")
+    const valueSplit = split(valueReplace, ';')
 
     const data = valueSplit.map((v) => {
-      const t = v.replace(/" /g, ',').replace(/"/g, '')
-      const tSplit = split(t, ',')
+      const t = v.replace(/" /g, ';').replace(/"/g, '')
+      console.log(t)
+
+      const tSplit = split(t, ';')
       return { name: tSplit[0], type: getType(tSplit[1]) }
     })
     setList(data)
