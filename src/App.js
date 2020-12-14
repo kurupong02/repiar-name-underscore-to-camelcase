@@ -3,7 +3,6 @@ import './App.css';
 import forEach from 'lodash/forEach'
 import split from 'lodash/split'
 import includes from 'lodash/includes'
-
 import FileSaver from 'file-saver'
 
 const underscoreToCamelcase = (v) => {
@@ -26,19 +25,19 @@ const textbox = (list) => {
 
     selectRow += `${v.name} AS ${underscoreToCamelcase(v.name)},\n`
     name += `${v.name}`
-    value = `${value}?`
+    value = `${value}model.${underscoreToCamelcase(`get_${v.name}`)}()`
     updateText += `${v.name} = ?,\n`
     dto1 += `dto.${set}(${index + 1}, ${underscoreToCamelcase(v.name)});\n`
     dto2 += `dto.${set}(rs.${get}("${underscoreToCamelcase(v.name)}"));\n`
     type += `private ${v.type} ${underscoreToCamelcase(v.name)};\n`
     if (index + 1 !== list.length) {
       name = `${name}, `
-      value = `${value}, `
+      value = `${value} +","+ `
     }
   })
 
   const line = "\n=================\n\n"
-  const result = `${selectRow}${line}${updateText}${line}${`(${name}) value (${value})\n`}${line}${dto1}${line}${dto2}${line}${type}`
+  const result = `${selectRow}${line}${updateText}${line}${`(${name}) VALUES (${value});\n`}${line}${dto1}${line}${dto2}${line}${type}`
 
   return (
     <textarea id="textbox" value={result}>Type something here</textarea>
