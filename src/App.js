@@ -13,6 +13,7 @@ const textbox = (list) => {
   var selectRow = ''
   var name = ''
   var value = ''
+  var insertValue = ''
   var updateText = ''
   var dto1 = ''
   var dto2 = ''
@@ -26,18 +27,20 @@ const textbox = (list) => {
     selectRow += `${v.name} AS ${underscoreToCamelcase(v.name)},\n`
     name += `${v.name}`
     value = `${value}model.${underscoreToCamelcase(`get_${v.name}`)}()`
+    insertValue = `${insertValue}?`
     updateText += `${v.name} = ?,\n`
     dto1 += `dto.${set}(${index + 1}, ${underscoreToCamelcase(v.name)});\n`
     dto2 += `dto.${set}(rs.${get}("${underscoreToCamelcase(v.name)}"));\n`
     type += `private ${v.type} ${underscoreToCamelcase(v.name)};\n`
     if (index + 1 !== list.length) {
       name = `${name}, `
+      insertValue = `${insertValue}, `
       value = `${value} +","+ `
     }
   })
 
   const line = "\n=================\n\n"
-  const result = `${selectRow}${line}${updateText}${line}${`(${name}) VALUES (${value});\n`}${line}${dto1}${line}${dto2}${line}${type}`
+  const result = `${selectRow}${line}${updateText}${line}${`(${name}) VALUES (${value});\n`}${line}${`(${name}) value (${insertValue});\n`}${line}${dto1}${line}${dto2}${line}${type}`
 
   return (
     <textarea id="textbox" value={result}>Type something here</textarea>
