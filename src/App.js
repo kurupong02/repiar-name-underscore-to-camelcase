@@ -110,7 +110,8 @@ function App() {
           dto1 += `dto.${setName}(${index + 1}, ${underscoreToCamelcase(v.name)});\n`
           dto2 += `dto.${setName}(rs.${get}("${underscoreToCamelcase(v.name)}"));\n`
 
-          check += `if (!${v.type}Utill.isNull(info.${getName}())) model.${setName}(info.${getName}());\n`
+          const checkIf = v.type === 'String' ? `!${v.type}Utill.isNull(info.${getName}())` : `null != info.${getName}()`
+          check += `if (${checkIf}) model.${setName}(info.${getName}());\n`
           type += `private ${v.type} ${underscoreToCamelcase(v.name)};\n`
           if (index + 1 !== mm.length) {
             name = `${name}, `
