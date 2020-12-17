@@ -525,8 +525,14 @@ export const data = [
     "UPDATED_BY" VARCHAR2(20 BYTE), 
     "ACTIVE_STATUS" VARCHAR2(1 BYTE)`
   },
+  {
+    "name": "PSA_MODEL_ACCS",
+    "data": `"ACCS_ID" NUMBER NOT NULL ENABLE, 
+    "ACCS_NAME" VARCHAR2(100 BYTE), 
+    "STATUS" VARCHAR2(10 BYTE), 
+    "CREATED_DATE" DATE, 
+    "CREATED_BY" VARCHAR2(20 BYTE), 
+    "UPDATED_DATE" DATE, 
+    "UPDATED_BY" VARCHAR2(20 BYTE)`
+  },
 ]
-
-// export const data = [
-
-// ]
