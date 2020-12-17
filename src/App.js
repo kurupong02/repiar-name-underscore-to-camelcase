@@ -95,17 +95,22 @@ function App() {
         var dto2 = ''
         var type = ''
         var model = ''
+        var check = ''
         forEach(mm, (v, index) => {
-          const set = underscoreToCamelcase(`set_${v.name}`)
+          const setName = underscoreToCamelcase(`set_${v.name}`)
+          const getName = underscoreToCamelcase(`get_${v.name}`)
           const get = underscoreToCamelcase(`get_${v.type}`)
+
           selectRow += `${v.name} AS ${underscoreToCamelcase(v.name)},\n`
           name += `${v.name}`
-          value = `${value}model.${underscoreToCamelcase(`get_${v.name}`)}()`
-          model = `${model}model.${underscoreToCamelcase(`get_${v.name}`)}()`
+          value = `${value}model.${getName}()`
+          model = `${model}model.${getName}()`
           insertValue = `${insertValue}?`
           updateText += `${v.name} = ?,\n`
-          dto1 += `dto.${set}(${index + 1}, ${underscoreToCamelcase(v.name)});\n`
-          dto2 += `dto.${set}(rs.${get}("${underscoreToCamelcase(v.name)}"));\n`
+          dto1 += `dto.${setName}(${index + 1}, ${underscoreToCamelcase(v.name)});\n`
+          dto2 += `dto.${setName}(rs.${get}("${underscoreToCamelcase(v.name)}"));\n`
+
+          check += `if (!${v.type}Utill.isNull(info.${getName}())) model.${setName}(info.${getName}());\n`
           type += `private ${v.type} ${underscoreToCamelcase(v.name)};\n`
           if (index + 1 !== mm.length) {
             name = `${name}, `
@@ -114,13 +119,29 @@ function App() {
             model = `${model}, `
           }
         })
+        setTimeout(() => {
+          const line = "=================\n"
+          const result =
+            `${selectRow}
+            ${line}
+            ${updateText}
+            ${line}
+            ${`(${name}) VALUES (${value});\n`}
+            ${line}${`(${name}) value (${insertValue});\n`}
+            ${line}{${model}};\n
+            ${line}
+            ${dto1}
+            ${line}
+            ${dto2}
+            ${line}
+            ${check}
+            ${line}
+            ${type}
+            `
 
-        const line = "\n=================\n\n"
-        const result = `${selectRow}${line}${updateText}${line}${`(${name}) VALUES (${value});\n`}${line}${`(${name}) value (${insertValue});\n`}${line}{${model}};\n${line}${dto1}${line}${dto2}${line}${type}`
-        console.log(result)
-
-        const file = await makeTextFile(result)
-        await FileSaver.saveAs(file, `${v.name}.txt`);
+          const file = makeTextFile(result.replace(/ {12}/g, ""))
+          FileSaver.saveAs(file, `${v.name}.txt`);
+        }, i * 1000);
       })
     }
     name()
