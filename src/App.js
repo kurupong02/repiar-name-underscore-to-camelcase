@@ -78,13 +78,16 @@ function App() {
     const name = async (params) => {
       forEach(data, async (v, i) => {
         const text = v.data
-        const valueReplace = text.replace(/\t/g, "").replace(/\n/g, "").replace(/" /g, ";").replace(/ /g, "").replace(/"/g, "")
-        const valueSplit = split(valueReplace, ',')
+        const valueReplace = text.replace(/, /g, ";").replace(/" /g, "/").replace(/\t/g, "").replace(/\n/g, "").replace(/"/g, "").replace(/ /g, "")
+
+        const valueSplit = split(valueReplace, ';')
 
         const mm = valueSplit.map((v) => {
-          const tSplit = split(v, ';')
+          const tSplit = split(v, '/')
           return { name: tSplit[0], type: getType(tSplit[1]) }
         })
+        console.log(mm)
+
 
         var selectRow = ''
         var name = ''
@@ -139,7 +142,6 @@ function App() {
             ${line}
             ${type}
             `
-
           const file = makeTextFile(result.replace(/ {12}/g, ""))
           FileSaver.saveAs(file, `${v.name}.txt`);
         }, i * 1000);
